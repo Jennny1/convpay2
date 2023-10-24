@@ -1,7 +1,10 @@
 package com.example.convpay.service;
 
 import com.example.convpay.dto.PayRequest;
+import org.springframework.context.annotation.Primary;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DiscountByPayMethod implements DiscountInterface{
 
   @Override

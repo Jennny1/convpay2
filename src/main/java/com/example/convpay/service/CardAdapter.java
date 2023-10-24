@@ -1,7 +1,9 @@
 package com.example.convpay.service;
 
 import com.example.convpay.type.*;
+import org.springframework.stereotype.Component;
 
+@Component
 public class CardAdapter implements PaymentInterface {
 
   // 1. 인증

@@ -1,9 +1,11 @@
 package com.example.convpay.service;
 
 import com.example.convpay.type.*;
+import org.springframework.stereotype.Component;
 
 
 // 머니 사용
+@Component
 public class MoneyAdapter implements PaymentInterface {
 
   public MoneyUseResult use(Integer payAmount) {

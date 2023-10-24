@@ -1,7 +1,9 @@
 package com.example.convpay.service;
 
 import com.example.convpay.dto.PayRequest;
+import org.springframework.stereotype.Component;
 
+@Component
 public class DiscountByConvenience implements DiscountInterface {
 
 

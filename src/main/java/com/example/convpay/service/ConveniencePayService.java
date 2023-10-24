@@ -13,11 +13,14 @@ import com.example.convpay.type.PaymentResult;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 /*
 결제
 결제취소
  */
+@Component
 public class ConveniencePayService {
 
   private final Map<PayMethodType, PaymentInterface> paymentInterfaceMap = new HashMap<>();
@@ -25,6 +28,7 @@ public class ConveniencePayService {
 
   // 인터페이스 생성자
   public ConveniencePayService(Set<PaymentInterface> paymentInterfaceSet,
+                               @Qualifier("discountByConvenience")
                                DiscountInterface discountInterface) {
 
     paymentInterfaceSet.forEach(
