@@ -1,9 +1,6 @@
 package com.example.convpay.service;
 
-import com.example.convpay.type.CancelPaymentResult;
-import com.example.convpay.type.MoneyUseCancelResult;
-import com.example.convpay.type.MoneyUseResult;
-import com.example.convpay.type.PaymentResult;
+import com.example.convpay.type.*;
 
 
 // 머니 사용
@@ -33,6 +30,11 @@ public class MoneyAdapter implements PaymentInterface {
 
     return MoneyUseCancelResult.MONEY_USE_CANCEL_SUCCESS;
 
+  }
+
+  @Override
+  public PayMethodType getPayMethodType() {
+    return PayMethodType.MONEY;
   }
 
   @Override

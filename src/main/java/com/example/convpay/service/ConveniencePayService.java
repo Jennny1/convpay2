@@ -10,27 +10,47 @@ import com.example.convpay.type.PayMethodType;
 import com.example.convpay.type.PayResult;
 import com.example.convpay.type.PaymentResult;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+
 /*
 결제
 결제취소
  */
 public class ConveniencePayService {
 
-  private final MoneyAdapter moneyAdapter = new MoneyAdapter();
-  private final CardAdapter cardAdapter = new CardAdapter();
-  private final DiscountInterface discountInterface = new DiscountByPayMethod();
+  private final Map<PayMethodType, PaymentInterface> paymentInterfaceMap = new HashMap<>();
+  private final DiscountInterface discountInterface;
 
+  // 인터페이스 생성자
+  public ConveniencePayService(Set<PaymentInterface> paymentInterfaceSet,
+                               DiscountInterface discountInterface) {
+
+    paymentInterfaceSet.forEach(
+            paymentInterface -> paymentInterfaceMap.put(
+                    paymentInterface.getPayMethodType(),
+                    paymentInterface
+            )
+    );
+
+    this.discountInterface = discountInterface;
+  }
+
+
+/*
+  private final MoneyAdapter moneyAdapter = new MoneyAdapter();
+  private final CardAdapter cardAdapter = new Card);
+  private final DiscountInterface discountInterface = new Adapter(DiscountByPayMethod();
+  private final DiscountInterface discountInterface = new DiscountByConvenience();
+*/
 
   public PayResponse pay(PayRequest payRequest) {
-    PaymentInterface paymentInterface;
+    // paymentInterfaceMap에서 key로 결제수단을 가져옴
+    PaymentInterface paymentInterface = paymentInterfaceMap.get(payRequest.getPayMethodType());
 
-    if (payRequest.getPayMethodType() == PayMethodType.CARD) {
-      paymentInterface = cardAdapter;
-    } else {
-      paymentInterface = moneyAdapter;
-    }
-
-    PaymentResult payment = paymentInterface.payment(payRequest.getPayAmount());
+    Integer discountedAmount = discountInterface.getDiscountedAmount(payRequest);
+    PaymentResult payment = paymentInterface.payment(discountedAmount);
 
     // Exception Case
     if (payment == PaymentResult.PAYMENT_FAIL) {
@@ -38,18 +58,14 @@ public class ConveniencePayService {
     }
 
     // Success Case (Only One)
-    return new PayResponse(PayResult.SUCCESS, payRequest.getPayAmount());
+    return new PayResponse(PayResult.SUCCESS, discountedAmount);
 
   }
 
   public PayCancelResponse payCancel(PayCancelRequest payCancelRequest) {
-    PaymentInterface paymentInterface;
+    // paymentInterfaceMap에서 key로 결제수단을 가져옴
+    PaymentInterface paymentInterface = paymentInterfaceMap.get(payCancelRequest.getPayMethodType());
 
-    if (payCancelRequest.getPayMethodType() == PayMethodType.CARD) {
-      paymentInterface = cardAdapter;
-    } else {
-      paymentInterface = moneyAdapter;
-    }
 
     CancelPaymentResult cancelPaymentResult = paymentInterface.cancelPayment(
         payCancelRequest.getPayCancelAmount());
